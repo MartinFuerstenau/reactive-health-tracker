@@ -1,0 +1,3 @@
+logging.level.org.springframework.r2dbc: DEBUG
+
+management.endpoints.web.exposure.include: health,metrics
