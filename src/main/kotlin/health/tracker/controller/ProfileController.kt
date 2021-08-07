@@ -11,5 +11,5 @@ import reactor.core.publisher.Mono
 class ProfileController(val profileRepository: ProfileRepository) {
 
     @PostMapping("/profile")
-    fun save(@RequestBody profile: Profile) : Mono<Profile> = profileRepository.save(profile)
+    suspend fun saveProfile(@RequestBody profile: Profile) : Profile = profileRepository.save(profile)
 }

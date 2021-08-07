@@ -2,6 +2,7 @@ package health.tracker.controller
 
 import health.tracker.model.HealthRecord
 import health.tracker.persistence.HealthRecordRepository
+import kotlinx.coroutines.flow.reduce
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 
@@ -9,7 +10,7 @@ import reactor.core.publisher.Mono
 class HealthRecordController(private val healthRecordRepository: HealthRecordRepository) {
 
     @PostMapping("/health/{profileId}/record")
-    fun storeHealthRecord(@PathVariable profileId: Long, @RequestBody record: HealthRecord): Mono<HealthRecord> {
+    suspend fun storeHealthRecord(@PathVariable profileId: Long, @RequestBody record: HealthRecord): HealthRecord {
         return healthRecordRepository.save(
             HealthRecord(
                 null, profileId, record.temperature, record.bloodPressure, record.heartRate, record.date
@@ -18,7 +19,7 @@ class HealthRecordController(private val healthRecordRepository: HealthRecordRep
     }
 
     @GetMapping("/health/{profileId}/avg")
-    fun avg(@PathVariable profileId: Long): Mono<AverageHealthStatus> =
+    suspend fun avg(@PathVariable profileId: Long): AverageHealthStatus =
         healthRecordRepository.findByProfileId(profileId)
             .reduce(
                 AverageHealthStatus(0, 0.0, 0.0, 0.0)
