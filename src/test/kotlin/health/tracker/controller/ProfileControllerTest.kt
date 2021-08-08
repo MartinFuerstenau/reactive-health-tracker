@@ -28,22 +28,13 @@ class ProfileControllerTest {
     }
 
     @Test
-    fun whenRequestProfile_thenStatusShouldBeOk() {
+    fun whenRequestProfile_thenStatusShouldBeOk_IdShouldBeNotNull() {
         client.post()
             .uri("/profile")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(profile)
             .exchange()
             .expectStatus().isOk
-    }
-
-    @Test
-    fun whenRequestProfile_thenIdShouldBeNotNull() {
-        client.post()
-            .uri("/profile")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(profile)
-            .exchange()
             .expectBody()
             .jsonPath("$.id")
             .isNotEmpty
