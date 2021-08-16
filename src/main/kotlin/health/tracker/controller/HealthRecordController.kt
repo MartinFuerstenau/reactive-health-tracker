@@ -27,7 +27,10 @@ class HealthRecordController(private val healthRecordRepository: HealthRecordRep
 
     @GetMapping("/health/{profileId}/records")
     suspend fun records(@PathVariable profileId: Long): Flow<HealthRecord> =
-        healthRecordRepository.findByProfileId(profileId).onEach { println(it) }
+        healthRecordRepository.findByProfileId(profileId)
+            .onStart { println("onStart FlowCollector<HealthRecord>") }
+            .onEach { println(it) }
+            .onCompletion { println("onCompletion FlowCollector<HealthRecord>") }
 
 
     @GetMapping("/health/{profileId}/avg")
