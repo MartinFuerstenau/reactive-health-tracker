@@ -36,7 +36,7 @@ internal class HealthRecordControllerTest {
 
     @Test
     fun storeHealthRecord() {
-        val record = HealthRecord(null, 1L, 36.0, 120.0, 60.0, LocalDate.now())
+        val record = HealthRecord(null, 1L, 36.0, 120, 80, 60.0, LocalDate.now())
         val body = mapper.writeValueAsString(record)
 
         client
@@ -54,7 +54,8 @@ internal class HealthRecordControllerTest {
     @Test
     fun records() {
         for (i in 1..5) {
-            val record = HealthRecord(null, profileId, 36.0 + i, 120.0 + i, 60.0 + i, LocalDate.now())
+            val record =
+                HealthRecord(null, profileId, 36.0 + i, 120 + i, 80 + i, 60.0 + i, LocalDate.now())
             val body = mapper.writeValueAsString(record)
             client
                 .post()
@@ -77,7 +78,9 @@ internal class HealthRecordControllerTest {
     @Test
     fun avg() {
         for (i in 1..5) {
-            val record = HealthRecord(null, profileId, 36.0 + i, 120.0 + i, 60.0 + i, LocalDate.now())
+            val record = HealthRecord(
+                null, profileId, 36.0 + i, 120 + i, 80 + i, 60.0 + i, LocalDate.now()
+            )
             val body = mapper.writeValueAsString(record)
             client
                 .post()
@@ -99,8 +102,10 @@ internal class HealthRecordControllerTest {
             .jsonPath("$.temperature").isEqualTo(39.0)
             .jsonPath("$.heartRate").isNumber
             .jsonPath("$.heartRate").isEqualTo(63.0)
-            .jsonPath("$.bloodPressure").isNumber
-            .jsonPath("$.bloodPressure").isEqualTo(123.0)
+            .jsonPath("$.bloodPressureSystolic").isNumber
+            .jsonPath("$.bloodPressureSystolic").isEqualTo(123.0)
+            .jsonPath("$.bloodPressureDiastolic").isNumber
+            .jsonPath("$.bloodPressureDiastolic").isEqualTo(83.0)
     }
 
 }

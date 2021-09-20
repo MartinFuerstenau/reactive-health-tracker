@@ -14,7 +14,7 @@ class HealthRecordController(private val healthRecordRepository: HealthRecordRep
     suspend fun storeHealthRecord(@PathVariable profileId: Long, @RequestBody record: HealthRecord): HealthRecord {
         return healthRecordRepository.save(
             HealthRecord(
-                null, profileId, record.temperature, record.bloodPressure, record.heartRate, record.date
+                null, profileId, record.temperature, record.bloodPressureSystolic, record.bloodPressureDiastolic, record.heartRate, record.date
             )
         )
     }
@@ -37,14 +37,16 @@ class HealthRecordController(private val healthRecordRepository: HealthRecordRep
     suspend fun avg(@PathVariable profileId: Long): AverageHealthStatus =
         healthRecordRepository
             .findByProfileId(profileId)
-            .fold(AverageHealthStatus(0, 0.0, 0.0, 0.0)) { acc, healthRecord ->
+            .fold(AverageHealthStatus(0, 0.0, 0, 0, 0.0)) { acc, healthRecord ->
                 acc.cnt++
                 acc.temperature += healthRecord.temperature
-                acc.bloodPressure += healthRecord.bloodPressure
+                acc.bloodPressureSystolic += healthRecord.bloodPressureSystolic
+                acc.bloodPressureDiastolic += healthRecord.bloodPressureDiastolic
                 acc.heartRate += healthRecord.heartRate
                 acc
             }.let {
-                it.bloodPressure /= it.cnt
+                it.bloodPressureSystolic /= it.cnt
+                it.bloodPressureDiastolic /= it.cnt
                 it.temperature /= it.cnt
                 it.heartRate /= it.cnt
                 it
@@ -53,5 +55,5 @@ class HealthRecordController(private val healthRecordRepository: HealthRecordRep
 
 class AverageHealthStatus(
     var cnt: Int, var temperature: Double,
-    var bloodPressure: Double, var heartRate: Double
+    var bloodPressureSystolic: Int, var bloodPressureDiastolic: Int, var heartRate: Double
 )

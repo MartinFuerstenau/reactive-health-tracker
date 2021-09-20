@@ -17,7 +17,8 @@ class DBConfiguration(db: DatabaseClient) {
                     id SERIAL PRIMARY KEY,
                     profile_id LONG NOT NULL,
                     temperature DECIMAL NOT NULL,
-                    blood_pressure DECIMAL NOT NULL,
+                    blood_pressure_systolic INTEGER NOT NULL,
+                    blood_pressure_diastolic INTEGER NOT NULL,
                     heart_rate DECIMAL,
                     date DATE NOT NULL
                 );
